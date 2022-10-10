@@ -15,6 +15,7 @@
  */
 package io.micronaut.starter.feature.view;
 
+import io.micronaut.context.env.Environment;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.starter.application.generator.GeneratorContext;
 import io.micronaut.starter.build.dependencies.Coordinate;
@@ -24,6 +25,7 @@ import io.micronaut.starter.build.gradle.GradleDsl;
 import java.util.Optional;
 import io.micronaut.starter.build.maven.MavenPlugin;
 import io.micronaut.starter.build.BuildPlugin;
+import io.micronaut.starter.feature.config.ApplicationConfiguration;
 import io.micronaut.starter.options.BuildTool;
 import io.micronaut.starter.feature.server.MicronautServerDependent;
 import io.micronaut.starter.template.RockerTemplate;
@@ -72,6 +74,9 @@ public class JTE implements ViewFeature, MicronautServerDependent {
             generatorContext.addBuildPlugin(mavenPlugin(generatorContext));
         }
         generatorContext.addTemplate("exampleJte", new RockerTemplate(JTE_SRC_DIR + "/example.jte", exampleJTE.template()));
+        ApplicationConfiguration devConfig = generatorContext.getConfiguration(Environment.DEVELOPMENT, ApplicationConfiguration.devConfig());
+        devConfig.put("micronaut.views.jte.dynamic", true);
+        devConfig.put("micronaut.views.jte.dynamicSourcePath", JTE_SRC_DIR);
     }
 
     private Dependency.Builder  dependencyBuilder() {
